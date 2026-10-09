@@ -15,6 +15,10 @@ export default function ToDoList() {
         return acc;
       }, {} as Record<string, boolean>)
   );
+  const [taskToDelete, setTaskToDelete] = useState<string | null>(null);
+  //null when task is not selected for deletion
+  //string when we have selected the task to delete
+  //start w/ null b/c user hasn't selected anything to delete when project first starts
 
   const addItem = (event: React.FormEvent) => {
     event.preventDefault();
@@ -77,13 +81,34 @@ export default function ToDoList() {
             </div>
             <button
               className="todolist-trashbutton"
-              onClick={() => removeItem(item)}
+              onClick={() => setTaskToDelete(item)}
             >
               Del
             </button>
           </li>
         ))}
       </ul>
+      {/*if user has selected a task to delete open taskToDelete container*/}
+      {taskToDelete !== null && (
+        <div className="delete-confirmation">
+          {/*create textbox*/}
+          <p>Are you sure you want to delete "{taskToDelete}"?</p>
+          {/*create no button*/}
+          <button className="delete-no-button" 
+              onClick={() => setTaskToDelete(null)}>
+              No
+          </button>
+          {/*create yes button*/}
+          <button className="delete-yes-button" 
+              onClick={() => {
+                removeItem(taskToDelete);
+                setTaskToDelete(null); 
+            }}>
+              Yes
+          </button>
+        </div>
+      )}
+      
     </div>
   );
 }
